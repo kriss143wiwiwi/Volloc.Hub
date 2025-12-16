@@ -13,6 +13,7 @@
             <a href="event.html">Мероприятия</a>
             <a href="profile.html">Профиль</a>
             <a href="register.html">Регистрация</a>
+            <img id="topAvatar" src="default-avatar.png" alt="Профиль">
         </section> 
     </nav>
 
@@ -67,6 +68,27 @@
             window.location.href = "profile.html";
         }, 1000);
     });
+    
+        const topAvatar = document.getElementById("topAvatar");
+
+        if (topAvatar) {
+            const currentUserEmail = localStorage.getItem("currentUser");
+
+            if (currentUserEmail) {
+                const storedUser = JSON.parse(localStorage.getItem(currentUserEmail));
+
+                if (storedUser?.profile?.avatar) {
+                    topAvatar.src = storedUser.profile.avatar;
+                }
+            }
+
+            topAvatar.addEventListener("click", () => {
+                window.location.href = "profile.html";
+            });
+        }
+
+
+    
 </script> 
 
 <a href="login.html"><button>Войти</button></a>

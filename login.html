@@ -13,6 +13,7 @@
             <a href="event.html">Мероприятия</a>
             <a href="profile.html">Профиль</a>
             <a href="register.html">Регистрация</a>
+            <img id="topAvatar" src="default-avatar.png" alt="Профиль">
         </section> 
     </nav>
 
@@ -22,7 +23,13 @@
     <input type="email" id="email" placeholder="Введите email" required>
     <input type="password" id="password" placeholder="Введите пароль" required>
     <button type="submit">Войти</button>
+    
 </form>
+
+
+<p>Нет аккаунта?</p>
+<a href="register.html"><button>Зарегестрироваться</button></a>
+
 
 <p id="message" style="color:red;"></p>
 
@@ -60,6 +67,27 @@
             window.location.href = "profile.html";
         }, 1000);
     });
+    
+        const topAvatar = document.getElementById("topAvatar");
+
+        if (topAvatar) {
+            const currentUserEmail = localStorage.getItem("currentUser");
+
+            if (currentUserEmail) {
+                const storedUser = JSON.parse(localStorage.getItem(currentUserEmail));
+
+                if (storedUser?.profile?.avatar) {
+                    topAvatar.src = storedUser.profile.avatar;
+                }
+            }
+
+            topAvatar.addEventListener("click", () => {
+                window.location.href = "profile.html";
+            });
+        }
+
+
+    
 </script>
 
 </body>

@@ -2,9 +2,8 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Профиль волонтёра</title>
+    <title>Профиль</title>
     <link rel="stylesheet" href="style.css">
-
 </head>
 <body>
     <nav>
@@ -13,78 +12,96 @@
             <a href="event.html">Мероприятия</a>
             <a href="profile.html">Профиль</a>
             <a href="register.html">Регистрация</a>
+            <img id="topAvatar" src="default-avatar.png" alt="Профиль">
+            
         </section> 
     </nav>
-<h2>Профиль волонтёра</h2>
 
-<p id="welcome"></p>
+    <h2 id="welcome">Здравствуйте!</h2>
+
+    <div id="profileStatus">
+        Пока анкета пустая. 
+    </div>
+
+    <button id="fillProfile">Заполнить анкету</button>
+    
+    <button id="logout">Выйти</button>
+
+    <script>
+        const currentUserEmail = localStorage.getItem("currentUser");
+        if (!currentUserEmail) {
+            window.location.href = "login.html";
+        }
+
+        let storedUser = JSON.parse(localStorage.getItem(currentUserEmail)) || {};
+        if (!storedUser.profile) storedUser.profile = {};
+
+        const user = storedUser;
+
+        // Приветствие
+        const welcome = document.getElementById("welcome");
+        welcome.textContent = user.profile.name ? 
+            `Здравствуйте, ${user.profile.name}!` : 
+            "Здравствуйте, волонтёр!";
+
+        // Функция выхода
+        document.getElementById("logout").addEventListener("click", () => {
+            localStorage.removeItem("currentUser");
+            window.location.href = "login.html";
+        });
+
+        // Кнопка заполнить анкету
+        document.getElementById("fillProfile").addEventListener("click", () => {
+            window.location.href = "fill-profile.html";
+        });
+
+        // Функция отображения анкеты
+        function updateProfileStatus() {
+            const container = document.getElementById("profileStatus");
+
+            if (user.profile && user.profile.name) {
+                container.innerHTML = `
+                    <div class="profile-card">
+                         <h4>Ваша анкета</h4>
+
+                        ${user.profile.avatar 
+                            ? `<img src="${user.profile.avatar}" class="profile-avatar">`
+                            : `<div class="profile-avatar placeholder"></div>`}
+
+                       
+                        <p><strong>Имя:</strong> ${user.profile.name}</p>
+                        <p><strong>Возраст:</strong> ${user.profile.age}</p>
+                        <p><strong>Навыки:</strong> ${user.profile.skills}</p>
+                        <p><strong>Описание опыта:</strong> ${user.profile.description}</p>
+                    </div>`;
+            } else {
+                container.textContent = "Пока анкета пуста.";
+            }
+        }
+
+        // Вызываем при загрузке страницы
+        updateProfileStatus();
+        
+        const topAvatar = document.getElementById("topAvatar");
+
+        if (topAvatar) {
+            const currentUserEmail = localStorage.getItem("currentUser");
+
+            if (currentUserEmail) {
+                const storedUser = JSON.parse(localStorage.getItem(currentUserEmail));
+
+                if (storedUser?.profile?.avatar) {
+                    topAvatar.src = storedUser.profile.avatar;
+                }
+            }
+
+            topAvatar.addEventListener("click", () => {
+                window.location.href = "profile.html";
+            });
+        }
 
 
-
-<div class="block">
-    <h3>Анкета волонтёра</h3>
-    <p id="profileStatus">Пока анкета пустая. Позже здесь будет форма для заполнения.</p>
-    <button id="fillProfile">Изменить</button>
-</div>
-
-<button id="logout" style="margin: 20px 0;" >Выйти</button>
-
-<script>
-    // Получаем текущего пользователя
-    const currentUserEmail = localStorage.getItem("currentUser");
-
-    if (!currentUserEmail) {
-        window.location.href = "login.html";
-    }
-
-    // Получаем свежие данные из localStorage
-    let storedUser = localStorage.getItem(currentUserEmail);
-    let user = JSON.parse(storedUser);
-
-    // Приветствие
-    const welcome = document.getElementById("welcome");
-
-    // Проверяем, есть ли имя
-    if (user.profile && user.profile.name) {
-        welcome.textContent = `Здравствуйте, ${user.profile.name}!`;
-    } else {
-        welcome.textContent = `Здравствуйте, волонтёр!`;  // Для нового пользователя
-    }
-
-    // Функция выхода
-    document.getElementById("logout").addEventListener("click", () => {
-        localStorage.removeItem("currentUser");
-        window.location.href = "login.html";
-    });
-
-    // Кнопка заполнить анкету
-    document.getElementById("fillProfile").addEventListener("click", () => {
-        window.location.href = "fill-profile.html";
-    });
-
-    function updateProfileStatus() {
-    storedUser = localStorage.getItem(currentUserEmail);
-    user = JSON.parse(storedUser);
-
-    const container = document.getElementById("profileStatus");
-
-    if (user.profile && user.profile.name) {
-        container.innerHTML = `
-        <div class="profile-card">
-            <h4>Ваша анкета</h4>
-            <p><strong>Имя:</strong> ${user.profile.name}</p>
-            <p><strong>Возраст:</strong> ${user.profile.age}</p>
-            <p><strong>Навыки:</strong> ${user.profile.skills}</p>
-            <p><strong>Описание опыта:</strong> ${user.profile.description}</p>
-        </div>`;
-    } else {
-        container.textContent = "Пока анкета пустая. Позже здесь будет форма для заполнения.";
-    }
-}
-
-
-    // Вызываем при загрузке страницы
-    updateProfileStatus();
-</script>
+    
+    </script>
 </body>
 </html>
